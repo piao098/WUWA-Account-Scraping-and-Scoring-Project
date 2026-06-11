@@ -1,0 +1,262 @@
+{
+  "version": "image-3.4-draft-2026-06-11",
+  "source": "按用户提供的鸣潮 3.4 版本强度榜图片整理",
+  "notes": [
+    "讨论用预设梯度，暂不纳入 score_accounts.py。",
+    "按图片分层提取限定五星角色；常驻五星、四星和漂泊者暂不参与本轮角色倍率计分。",
+    "图片中 T4 基本为常驻或四星，所以本配置保留 T4 档位但暂不放入计分角色。",
+    "洛瑟菈专武中文名仍需后续复核。"
+  ],
+  "tier_multipliers": {
+    "T0": 1.8,
+    "T0.5": 1.4,
+    "T1": 1,
+    "T2": 0.6,
+    "T3": 0.3,
+    "T4": -0.5
+  },
+  "tiers": {
+    "T0": [
+      {
+        "name": "爱弥斯",
+        "version": "3.x",
+        "role_type": "辅助/副C",
+        "signature_weapon": "灼霜",
+        "reason": "按 3.4 图片强度榜位于 T0。"
+      },
+      {
+        "name": "绯雪",
+        "version": "3.x",
+        "role_type": "主C",
+        "signature_weapon": "浩境粼光",
+        "reason": "按 3.4 图片强度榜位于 T0。"
+      },
+      {
+        "name": "琳奈",
+        "version": "3.x",
+        "role_type": "主C/副C",
+        "signature_weapon": "昙切",
+        "reason": "按 3.4 图片强度榜位于 T0。"
+      }
+    ],
+    "T0.5": [
+      {
+        "name": "达妮娅",
+        "version": "3.x",
+        "role_type": "主C/副C",
+        "signature_weapon": "赝作的矮星",
+        "reason": "按 3.4 图片强度榜位于 T0.5。"
+      },
+      {
+        "name": "洛瑟菈",
+        "version": "3.x",
+        "role_type": "副C/辅助",
+        "signature_weapon": "待补充",
+        "reason": "按 3.4 图片强度榜位于 T0.5。"
+      },
+      {
+        "name": "守岸人",
+        "version": "1.x",
+        "role_type": "辅助",
+        "signature_weapon": "星序协响",
+        "reason": "按 3.4 图片强度榜位于 T0.5。"
+      },
+      {
+        "name": "卡提希娅",
+        "version": "3.x",
+        "role_type": "主C",
+        "signature_weapon": "不屈命定之冠",
+        "reason": "按 3.4 图片强度榜位于 T0.5。"
+      },
+      {
+        "name": "千咲",
+        "version": "3.x",
+        "role_type": "主C/副C",
+        "signature_weapon": "永远的启明星",
+        "reason": "按 3.4 图片强度榜位于 T0.5。"
+      },
+      {
+        "name": "莫宁",
+        "version": "3.x",
+        "role_type": "副C/辅助",
+        "signature_weapon": "相位涟漪",
+        "reason": "按 3.4 图片强度榜位于 T0.5。"
+      },
+      {
+        "name": "尤诺",
+        "version": "2.x",
+        "role_type": "辅助",
+        "signature_weapon": "万物持存的注释",
+        "reason": "按 3.4 图片强度榜位于 T0.5。"
+      },
+      {
+        "name": "奥古斯塔",
+        "version": "2.x",
+        "role_type": "主C",
+        "signature_weapon": "驭冕铸雷之权",
+        "reason": "按 3.4 图片强度榜位于 T0.5。"
+      },
+      {
+        "name": "陆赫斯",
+        "version": "3.x",
+        "role_type": "主C/副C",
+        "signature_weapon": "碎骨",
+        "reason": "按 3.4 图片强度榜位于 T0.5。"
+      },
+      {
+        "name": "露西",
+        "version": "3.x",
+        "role_type": "辅助/副C",
+        "signature_weapon": "蜃影",
+        "reason": "按 3.4 图片强度榜位于 T0.5。"
+      },
+      {
+        "name": "西格莉卡",
+        "version": "3.x",
+        "role_type": "辅助/副C",
+        "signature_weapon": "镭射切变",
+        "reason": "按 3.4 图片强度榜位于 T0。"
+      },
+      {
+        "name": "弗洛洛",
+        "version": "2.x",
+        "role_type": "主C",
+        "signature_weapon": "幽冥的忘忧章",
+        "reason": "按 3.4 图片强度榜位于 T0.5。"
+      }
+    ],
+    "T1": [
+      {
+        "name": "嘉贝莉娜",
+        "version": "3.x",
+        "role_type": "主C/副C",
+        "signature_weapon": "玻色星仪",
+        "reason": "按 3.4 图片强度榜位于 T1。"
+      },
+      {
+        "name": "夏空",
+        "version": "2.x",
+        "role_type": "副C",
+        "signature_weapon": "林间的咏叹调",
+        "reason": "按 3.4 图片强度榜位于 T1。"
+      },
+      {
+        "name": "露帕",
+        "version": "3.x",
+        "role_type": "主C",
+        "signature_weapon": "昭日译注",
+        "reason": "按 3.4 图片强度榜位于 T1。"
+      },
+      {
+        "name": "丽贝卡",
+        "version": "3.x",
+        "role_type": "副C/辅助",
+        "signature_weapon": "溢彩荧辉",
+        "reason": "按 3.4 图片强度榜位于 T1。"
+      },
+      {
+        "name": "仇远",
+        "version": "3.x",
+        "role_type": "主C/副C",
+        "signature_weapon": "宙算仪轨",
+        "reason": "按 3.4 图片强度榜位于 T1。"
+      },
+      {
+        "name": "赞妮",
+        "version": "2.x",
+        "role_type": "主C",
+        "signature_weapon": "焰痕",
+        "reason": "按 3.4 图片强度榜位于 T1。"
+      },
+      {
+        "name": "菲比",
+        "version": "2.x",
+        "role_type": "主C",
+        "signature_weapon": "光影双生",
+        "reason": "按 3.4 图片强度榜位于 T1。"
+      },
+      {
+        "name": "坎特蕾拉",
+        "version": "2.x",
+        "role_type": "副C",
+        "signature_weapon": "海的呢喃",
+        "reason": "按 3.4 图片强度榜位于 T1。"
+      },
+      {
+        "name": "布兰特",
+        "version": "2.x",
+        "role_type": "辅助",
+        "signature_weapon": "不灭航路",
+        "reason": "按 3.4 图片强度榜位于 T1。"
+      }
+    ],
+    "T2": [
+      {
+        "name": "珂莱塔",
+        "version": "2.x",
+        "role_type": "主C",
+        "signature_weapon": "死与舞",
+        "reason": "按 3.4 图片强度榜位于 T2。"
+      },
+      {
+        "name": "今汐",
+        "version": "1.x",
+        "role_type": "主C",
+        "signature_weapon": "时和岁稔",
+        "reason": "按 3.4 图片强度榜位于 T2。"
+      },
+      {
+        "name": "忌炎",
+        "version": "1.x",
+        "role_type": "主C",
+        "signature_weapon": "苍鳞千嶂",
+        "reason": "按 3.4 图片强度榜位于 T2。"
+      },
+      {
+        "name": "长离",
+        "version": "1.x",
+        "role_type": "主C/速切",
+        "signature_weapon": "焰光裁定",
+        "reason": "按 3.4 图片强度榜位于 T2。"
+      },
+      {
+        "name": "折枝",
+        "version": "1.x",
+        "role_type": "副C",
+        "signature_weapon": "琼枝冰绡",
+        "reason": "按 3.4 图片强度榜位于 T2。"
+      },
+      {
+        "name": "椿",
+        "version": "1.x",
+        "role_type": "主C",
+        "signature_weapon": "裁春",
+        "reason": "按 3.4 图片强度榜位于 T1。"
+      }
+    ],
+    "T3": [
+      {
+        "name": "吟霖",
+        "version": "1.x",
+        "role_type": "副C",
+        "signature_weapon": "掣傀之手",
+        "reason": "按 3.4 图片强度榜位于 T3。"
+      },
+      {
+        "name": "洛可可",
+        "version": "2.x",
+        "role_type": "辅助",
+        "signature_weapon": "悲喜剧",
+        "reason": "按 3.4 图片强度榜位于 T3。"
+      },
+      {
+        "name": "相里要",
+        "version": "1.x",
+        "role_type": "主C",
+        "signature_weapon": "诸方玄枢",
+        "reason": "按 3.4 图片强度榜位于 T2。"
+      }
+    ],
+    "T4": []
+  }
+}

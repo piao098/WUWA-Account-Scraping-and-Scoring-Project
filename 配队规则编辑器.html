@@ -1,0 +1,395 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>鸣潮配队规则编辑器</title>
+  <style>
+    :root {
+      color-scheme: light;
+      --bg: #f6f7fb;
+      --panel: #fff;
+      --line: #d9deea;
+      --text: #1f2937;
+      --muted: #667085;
+      --blue: #2563eb;
+      --green: #047857;
+      --orange: #d97706;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Microsoft YaHei", sans-serif;
+      background: var(--bg);
+      color: var(--text);
+    }
+    header {
+      position: sticky;
+      top: 0;
+      z-index: 2;
+      padding: 14px 18px;
+      background: rgba(255,255,255,.96);
+      border-bottom: 1px solid var(--line);
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 12px;
+      align-items: center;
+    }
+    h1 { margin: 0; font-size: 20px; }
+    .sub { margin-top: 4px; color: var(--muted); font-size: 12px; }
+    .actions { display: flex; gap: 8px; align-items: center; }
+    button {
+      border: 1px solid var(--line);
+      background: #fff;
+      color: var(--text);
+      border-radius: 6px;
+      padding: 8px 10px;
+      cursor: pointer;
+      font-size: 13px;
+    }
+    button.primary {
+      background: var(--blue);
+      color: white;
+      border-color: var(--blue);
+    }
+    main {
+      padding: 16px;
+      display: grid;
+      grid-template-columns: minmax(720px, 1fr) 420px;
+      gap: 14px;
+      align-items: start;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      background: var(--panel);
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      overflow: hidden;
+    }
+    th, td {
+      border-bottom: 1px solid var(--line);
+      padding: 8px;
+      vertical-align: top;
+      font-size: 13px;
+    }
+    th {
+      background: #eef2f8;
+      text-align: left;
+      color: #344054;
+      font-weight: 700;
+    }
+    tr:last-child td { border-bottom: 0; }
+    input, select, textarea {
+      width: 100%;
+      border: 1px solid var(--line);
+      border-radius: 6px;
+      padding: 7px 8px;
+      font: inherit;
+      background: #fff;
+      color: var(--text);
+    }
+    input, select { min-height: 36px; }
+    textarea {
+      min-height: 58px;
+      resize: vertical;
+    }
+    .team-input { min-width: 220px; }
+    .owned { color: var(--green); font-weight: 700; }
+    .fixed { color: var(--orange); font-weight: 700; }
+    .two { color: var(--blue); font-weight: 700; }
+    aside {
+      position: sticky;
+      top: 78px;
+      display: grid;
+      gap: 10px;
+    }
+    .panel {
+      background: var(--panel);
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      padding: 12px;
+    }
+    .panel h2 {
+      margin: 0 0 8px;
+      font-size: 15px;
+    }
+    #output {
+      width: 100%;
+      min-height: 520px;
+      font-family: Consolas, "SFMono-Regular", monospace;
+      font-size: 12px;
+      line-height: 1.45;
+      white-space: pre;
+    }
+    .toast { color: var(--green); font-size: 13px; min-width: 60px; }
+    @media (max-width: 1120px) {
+      main { grid-template-columns: 1fr; }
+      aside { position: static; }
+      th { position: static; }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div>
+      <h1>鸣潮配队规则编辑器</h1>
+      <div class="sub">3号位不绑定；owned_only = 拥有即满足；fixed_team = 一个核心二人组；two_team = 两个二人组任意满足。</div>
+    </div>
+    <div class="actions">
+      <button id="resetBtn">重置</button>
+      <button id="loadBtn">加载配置文件</button>
+      <button id="saveBtn" class="primary">保存到配置文件</button>
+      <button id="copyBtn">复制 JSON</button>
+      <button id="downloadBtn">下载 JSON</button>
+      <span id="toast" class="toast"></span>
+    </div>
+  </header>
+  <main>
+    <table>
+      <thead>
+        <tr>
+          <th style="width: 110px;">角色</th>
+          <th style="width: 130px;">定位</th>
+          <th style="width: 130px;">判定方式</th>
+          <th>核心配对</th>
+          <th>备注</th>
+        </tr>
+      </thead>
+      <tbody id="rows"></tbody>
+    </table>
+    <aside>
+      <section class="panel">
+        <h2>编辑说明</h2>
+        <div class="sub">
+          核心配对只填 2 个角色。用中文逗号、顿号、加号或空格分隔都可以。选择 two_team 时写两行，每行一套二人组。
+        </div>
+      </section>
+      <textarea id="output" spellcheck="false" aria-label="导出的配队规则 JSON"></textarea>
+    </aside>
+  </main>
+  <script>
+    const initialData = {
+      "version": "pair-check-draft-2026-06-11",
+      "notes": [
+        "用于账号评分的配队完整度判断。",
+        "3号位不绑定，只判断主C + 关键副C/体系辅助的核心二人组。",
+        "owned_only 表示拥有该角色即视为配队条件满足，主要用于泛用辅助/通用增益。",
+        "fixed_team 表示必须同时拥有 core_team 内 2 个角色才给完整配队加分。",
+        "two_team 表示满足 core_teams 中任意一套二人组即可给完整配队加分。",
+        "常驻五星、四星和漂泊者可作为配对条件出现，但不进入角色倍率计分。"
+      ],
+      "bonus_rules": {
+        "owned_only_bonus": 4,
+        "complete_fixed_team_bonus": 4,
+        "complete_two_team_bonus": 4,
+        "incomplete_bonus": 0,
+        "max_bonus_per_character": 4
+      },
+      "teams": {
+        "爱弥斯": {"position": "主C", "check_type": "two_team", "core_teams": [["爱弥斯", "琳奈"], ["爱弥斯", "莫宁"]], "note": "失谐/调律体系核心输出；第三位不绑定"},
+        "绯雪": {"position": "主C", "check_type": "two_team", "core_teams": [["绯雪", "洛瑟菈"], ["绯雪", "千咲"]], "note": "霜渐高配核心；第三位不绑定"},
+        "琳奈": {"position": "泛用副C/增益", "check_type": "owned_only", "core_team": [], "note": "泛用增益很强，不强制绑定某个主C"},
+        "西格莉卡": {"position": "主C", "check_type": "two_team", "core_teams": [["西格莉卡", "夏空"], ["西格莉卡", "嘉贝莉娜"]], "note": "声骸技能主C核心二人组"},
+        "达妮娅": {"position": "体系副C/辅助", "check_type": "two_team", "core_teams": [["爱弥斯", "达妮娅"], ["达妮娅", "露帕"]], "note": "体系副C/辅助，按核心二人组判断"},
+        "洛瑟菈": {"position": "体系副C/辅助", "check_type": "two_team", "core_teams": [["绯雪", "洛瑟菈"], ["千咲", "洛瑟菈"]], "note": "霜渐/声骸体系关键队友"},
+        "弗洛洛": {"position": "主C", "check_type": "two_team", "core_teams": [["弗洛洛", "坎特蕾拉"], ["弗洛洛", "仇远"]], "note": "声骸/湮灭体系核心二人组"},
+        "守岸人": {"position": "泛用辅助", "check_type": "owned_only", "core_team": [], "note": "顶级泛用生存与暴击增益，不锁队"},
+        "卡提希娅": {"position": "主C", "check_type": "two_team", "core_teams": [["卡提希娅", "夏空"], ["卡提希娅", "漂泊者·气动"]], "note": "气动侵蚀体系核心二人组"},
+        "千咲": {"position": "体系副C/辅助", "check_type": "two_team", "core_teams": [["绯雪", "千咲"], ["千咲", "洛瑟菈"]], "note": "绯雪霜渐队关键组件"},
+        "莫宁": {"position": "泛用辅助", "check_type": "owned_only", "core_team": [], "note": "调律体系强辅助，同时有一定泛用性"},
+        "尤诺": {"position": "副C/辅助", "check_type": "fixed_team", "core_team": ["奥古斯塔", "尤诺"], "note": "奥古斯塔重击体系队友；第三位不绑定"},
+        "奥古斯塔": {"position": "主C", "check_type": "fixed_team", "core_team": ["奥古斯塔", "尤诺"], "note": "重击主C核心二人组"},
+        "陆赫斯": {"position": "主C", "check_type": "two_team", "core_teams": [["陆赫斯", "琳奈"], ["陆赫斯", "莫宁"]], "note": "失谐/调律体系输出"},
+        "露西": {"position": "主C", "check_type": "fixed_team", "core_team": ["露西", "丽贝卡"], "note": "联动骇破核心二人组"},
+        "嘉贝莉娜": {"position": "主C", "check_type": "fixed_team", "core_team": ["嘉贝莉娜", "仇远"], "note": "声骸技能输出核心二人组"},
+        "夏空": {"position": "体系副C", "check_type": "two_team", "core_teams": [["卡提希娅", "夏空"], ["西格莉卡", "夏空"]], "note": "气动/声骸体系队友"},
+        "露帕": {"position": "体系副C/辅助", "check_type": "two_team", "core_teams": [["长离", "露帕"], ["爱弥斯", "露帕"]], "note": "热熔/聚爆体系核心拼图"},
+        "丽贝卡": {"position": "副C/辅助", "check_type": "fixed_team", "core_team": ["露西", "丽贝卡"], "note": "露西骇破队副C"},
+        "仇远": {"position": "体系副C/辅助", "check_type": "two_team", "core_teams": [["嘉贝莉娜", "仇远"], ["弗洛洛", "仇远"]], "note": "声骸技能拐"},
+        "赞妮": {"position": "主C", "check_type": "fixed_team", "core_team": ["赞妮", "菲比"], "note": "光噪/衍射核心二人组"},
+        "菲比": {"position": "副C/主C", "check_type": "fixed_team", "core_team": ["赞妮", "菲比"], "note": "赞妮队核心挂层队友"},
+        "坎特蕾拉": {"position": "副C/辅助", "check_type": "fixed_team", "core_team": ["弗洛洛", "坎特蕾拉"], "note": "弗洛洛核心队友之一"},
+        "布兰特": {"position": "辅助/副C", "check_type": "two_team", "core_teams": [["布兰特", "长离"], ["布兰特", "露帕"]], "note": "热熔队核心二人组；第三位不绑定"},
+        "椿": {"position": "主C", "check_type": "fixed_team", "core_team": ["椿", "洛可可"], "note": "湮灭主C核心二人组"},
+        "珂莱塔": {"position": "主C", "check_type": "fixed_team", "core_team": ["珂莱塔", "折枝"], "note": "冷凝/共鸣技能主C核心二人组"},
+        "今汐": {"position": "主C", "check_type": "fixed_team", "core_team": ["今汐", "折枝"], "note": "今汐经典核心二人组"},
+        "忌炎": {"position": "主C", "check_type": "fixed_team", "core_team": ["忌炎", "莫特斐"], "note": "重击/Aero 主C核心二人组"},
+        "长离": {"position": "主C/速切", "check_type": "two_team", "core_teams": [["长离", "布兰特"], ["长离", "露帕"]], "note": "热熔/速切核心二人组"},
+        "折枝": {"position": "副C/辅助", "check_type": "two_team", "core_teams": [["今汐", "折枝"], ["珂莱塔", "折枝"]], "note": "冷凝/技能伤害核心副C"},
+        "相里要": {"position": "主C", "check_type": "two_team", "core_teams": [["相里要", "吟霖"], ["相里要", "琳奈"]], "note": "解放伤害主C核心二人组"},
+        "吟霖": {"position": "副C", "check_type": "fixed_team", "core_team": ["相里要", "吟霖"], "note": "导电/解放伤害老牌核心二人组"},
+        "洛可可": {"position": "副C/辅助", "check_type": "fixed_team", "core_team": ["椿", "洛可可"], "note": "椿队副C与聚怪/增益"}
+      }
+    }
+    ;
+
+    const rowsEl = document.getElementById("rows");
+    const outputEl = document.getElementById("output");
+    const toastEl = document.getElementById("toast");
+    let data = JSON.parse(JSON.stringify(initialData));
+
+    function showToast(text) {
+      toastEl.textContent = text;
+      clearTimeout(showToast.timer);
+      showToast.timer = setTimeout(() => toastEl.textContent = "", 1600);
+    }
+
+    function parseTeam(text) {
+      return text.split(/[、，,+\s]+/).map(x => x.trim()).filter(Boolean);
+    }
+
+    function parseTeams(text) {
+      return text
+        .split(/\n+/)
+        .map(line => parseTeam(line))
+        .filter(team => team.length);
+    }
+
+    function teamText(team) {
+      return (team || []).join("、");
+    }
+
+    function teamsText(info) {
+      if (info.check_type === "two_team") {
+        return (info.core_teams || []).map(teamText).join("\n");
+      }
+      return teamText(info.core_team);
+    }
+
+    function updateOutput() {
+      outputEl.value = JSON.stringify(data, null, 2);
+    }
+
+    async function copyJson() {
+      updateOutput();
+      try {
+        await navigator.clipboard.writeText(outputEl.value);
+        showToast("已复制");
+      } catch (error) {
+        outputEl.focus();
+        outputEl.select();
+        const ok = document.execCommand("copy");
+        showToast(ok ? "已复制" : "复制失败，请手动复制");
+      }
+    }
+
+    async function loadConfig() {
+      try {
+        const response = await fetch("/api/team-rules", { cache: "no-store" });
+        if (!response.ok) throw new Error(`HTTP ${response.status}`);
+        data = await response.json();
+        render();
+        showToast("已加载配置");
+      } catch (error) {
+        showToast("请用 http://127.0.0.1:8770 打开后再加载");
+      }
+    }
+
+    async function saveConfig() {
+      updateOutput();
+      let payload;
+      try {
+        payload = JSON.parse(outputEl.value);
+      } catch (error) {
+        showToast(`JSON 无效：${error.message}`);
+        return;
+      }
+      try {
+        const response = await fetch("/api/team-rules", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(payload)
+        });
+        const result = await response.json();
+        if (!response.ok || !result.ok) throw new Error(result.error || `HTTP ${response.status}`);
+        data = payload;
+        showToast("已保存到配置文件");
+      } catch (error) {
+        showToast("保存失败：请用 http://127.0.0.1:8770 打开");
+      }
+    }
+
+    function render() {
+      rowsEl.innerHTML = "";
+      for (const [name, info] of Object.entries(data.teams)) {
+        const tr = document.createElement("tr");
+        const checkClass = info.check_type === "owned_only" ? "owned" : (info.check_type === "two_team" ? "two" : "fixed");
+        tr.innerHTML = `
+          <td><strong>${name}</strong></td>
+          <td><input value="${info.position || ""}" data-field="position"></td>
+          <td>
+            <select data-field="check_type" class="${checkClass}">
+              <option value="owned_only">owned_only</option>
+              <option value="fixed_team">fixed_team</option>
+              <option value="two_team">two_team</option>
+            </select>
+          </td>
+          <td><textarea class="team-input" data-field="team_rules" placeholder="角色A、角色B、角色C">${teamsText(info)}</textarea></td>
+          <td><textarea data-field="note">${info.note || ""}</textarea></td>
+        `;
+        tr.querySelector('select[data-field="check_type"]').value = info.check_type;
+        tr.querySelectorAll("[data-field]").forEach(input => {
+          input.addEventListener("input", event => {
+            const field = event.target.dataset.field;
+            if (field === "team_rules") {
+              if (data.teams[name].check_type === "owned_only") {
+                data.teams[name].core_team = [];
+                delete data.teams[name].core_teams;
+              } else if (data.teams[name].check_type === "two_team") {
+                data.teams[name].core_teams = parseTeams(event.target.value).slice(0, 2);
+                delete data.teams[name].core_team;
+              } else {
+                data.teams[name].core_team = parseTeam(event.target.value);
+                delete data.teams[name].core_teams;
+              }
+            } else {
+              data.teams[name][field] = event.target.value;
+              if (field === "check_type" && event.target.value === "owned_only") {
+                data.teams[name].core_team = [];
+                delete data.teams[name].core_teams;
+                tr.querySelector('[data-field="team_rules"]').value = "";
+              } else if (field === "check_type" && event.target.value === "two_team") {
+                const current = data.teams[name].core_teams || (data.teams[name].core_team ? [data.teams[name].core_team] : []);
+                data.teams[name].core_teams = current.slice(0, 2);
+                delete data.teams[name].core_team;
+                tr.querySelector('[data-field="team_rules"]').value = data.teams[name].core_teams.map(teamText).join("\n");
+              } else if (field === "check_type" && event.target.value === "fixed_team") {
+                const firstTeam = data.teams[name].core_team || (data.teams[name].core_teams || [])[0] || [];
+                data.teams[name].core_team = firstTeam;
+                delete data.teams[name].core_teams;
+                tr.querySelector('[data-field="team_rules"]').value = teamText(firstTeam);
+              }
+            }
+            updateOutput();
+          });
+        });
+        rowsEl.appendChild(tr);
+      }
+      updateOutput();
+    }
+
+    document.getElementById("resetBtn").addEventListener("click", () => {
+      data = JSON.parse(JSON.stringify(initialData));
+      render();
+      showToast("已重置");
+    });
+    document.getElementById("loadBtn").addEventListener("click", loadConfig);
+    document.getElementById("saveBtn").addEventListener("click", saveConfig);
+    document.getElementById("copyBtn").addEventListener("click", copyJson);
+    document.getElementById("downloadBtn").addEventListener("click", () => {
+      updateOutput();
+      const blob = new Blob([outputEl.value], { type: "application/json;charset=utf-8" });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = "team_first_examples.json";
+      a.click();
+      URL.revokeObjectURL(url);
+      showToast("已下载");
+    });
+    render();
+  </script>
+</body>
+</html>
+

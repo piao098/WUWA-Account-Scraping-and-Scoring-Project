@@ -1,0 +1,386 @@
+{
+  "version": "pair-check-draft-2026-06-11",
+  "notes": [
+    "用于账号评分的配队完整度判断。",
+    "3号位不绑定，只判断主C + 关键副C/体系辅助的核心二人组。",
+    "owned_only 表示拥有该角色即视为配队条件满足，主要用于泛用辅助/通用增益。",
+    "fixed_team 表示必须同时拥有 core_team 内 2 个角色才给完整配队加分。",
+    "two_team 表示满足 core_teams 中任意一套二人组即可给完整配队加分。",
+    "常驻五星、四星和漂泊者可作为配对条件出现，但不进入角色倍率计分。"
+  ],
+  "bonus_rules": {
+    "owned_only_bonus": 4,
+    "complete_fixed_team_bonus": 4,
+    "complete_two_team_bonus": 4,
+    "incomplete_bonus": 0,
+    "max_bonus_per_character": 4
+  },
+  "teams": {
+    "爱弥斯": {
+      "position": "主C",
+      "check_type": "two_team",
+      "core_teams": [
+        [
+          "爱弥斯",
+          "琳奈"
+        ],
+        [
+          "爱弥斯",
+          "莫宁"
+        ]
+      ],
+      "note": "失谐/调律体系核心输出；第三位不绑定"
+    },
+    "绯雪": {
+      "position": "主C",
+      "check_type": "two_team",
+      "core_teams": [
+        [
+          "绯雪",
+          "洛瑟菈"
+        ],
+        [
+          "绯雪",
+          "千咲"
+        ]
+      ],
+      "note": "霜渐高配核心；第三位不绑定"
+    },
+    "琳奈": {
+      "position": "泛用副C/增益",
+      "check_type": "owned_only",
+      "core_team": [],
+      "note": "泛用增益很强，不强制绑定某个主C"
+    },
+    "西格莉卡": {
+      "position": "主C",
+      "check_type": "two_team",
+      "core_teams": [
+        [
+          "西格莉卡",
+          "夏空"
+        ],
+        [
+          "西格莉卡",
+          "嘉贝莉娜"
+        ]
+      ],
+      "note": "声骸技能主C核心二人组"
+    },
+    "达妮娅": {
+      "position": "体系副C/辅助",
+      "check_type": "two_team",
+      "core_teams": [
+        [
+          "爱弥斯",
+          "达妮娅"
+        ],
+        [
+          "达妮娅",
+          "露帕"
+        ]
+      ],
+      "note": "体系副C/辅助，按核心二人组判断"
+    },
+    "洛瑟菈": {
+      "position": "体系副C/辅助",
+      "check_type": "two_team",
+      "core_teams": [
+        [
+          "绯雪",
+          "洛瑟菈"
+        ],
+        [
+          "千咲",
+          "洛瑟菈"
+        ]
+      ],
+      "note": "霜渐/声骸体系关键队友"
+    },
+    "弗洛洛": {
+      "position": "主C",
+      "check_type": "two_team",
+      "core_teams": [
+        [
+          "弗洛洛",
+          "坎特蕾拉"
+        ],
+        [
+          "弗洛洛",
+          "仇远"
+        ]
+      ],
+      "note": "声骸/湮灭体系核心二人组"
+    },
+    "守岸人": {
+      "position": "泛用辅助",
+      "check_type": "owned_only",
+      "core_team": [],
+      "note": "顶级泛用生存与暴击增益，不锁队"
+    },
+    "卡提希娅": {
+      "position": "主C",
+      "check_type": "two_team",
+      "core_teams": [
+        [
+          "卡提希娅",
+          "夏空"
+        ],
+        [
+          "卡提希娅",
+          "漂泊者·气动"
+        ]
+      ],
+      "note": "气动侵蚀体系核心二人组"
+    },
+    "千咲": {
+      "position": "体系副C/辅助",
+      "check_type": "owned_only",
+      "note": "绯雪霜渐队关键组件",
+      "core_team": []
+    },
+    "莫宁": {
+      "position": "泛用辅助",
+      "check_type": "owned_only",
+      "core_team": [],
+      "note": "调律体系强辅助，同时有一定泛用性"
+    },
+    "尤诺": {
+      "position": "副C/辅助",
+      "check_type": "fixed_team",
+      "core_team": [
+        "奥古斯塔",
+        "尤诺"
+      ],
+      "note": "奥古斯塔重击体系队友；第三位不绑定"
+    },
+    "奥古斯塔": {
+      "position": "主C",
+      "check_type": "fixed_team",
+      "core_team": [
+        "奥古斯塔",
+        "尤诺"
+      ],
+      "note": "重击主C核心二人组"
+    },
+    "陆赫斯": {
+      "position": "主C",
+      "check_type": "two_team",
+      "core_teams": [
+        [
+          "陆赫斯",
+          "琳奈"
+        ],
+        [
+          "陆赫斯",
+          "莫宁"
+        ]
+      ],
+      "note": "失谐/调律体系输出"
+    },
+    "露西": {
+      "position": "主C",
+      "check_type": "fixed_team",
+      "core_team": [
+        "露西",
+        "丽贝卡"
+      ],
+      "note": "联动骇破核心二人组"
+    },
+    "嘉贝莉娜": {
+      "position": "主C",
+      "check_type": "fixed_team",
+      "core_team": [
+        "嘉贝莉娜",
+        "仇远"
+      ],
+      "note": "声骸技能输出核心二人组"
+    },
+    "夏空": {
+      "position": "体系副C",
+      "check_type": "two_team",
+      "core_teams": [
+        [
+          "卡提希娅",
+          "夏空"
+        ],
+        [
+          "西格莉卡",
+          "夏空"
+        ]
+      ],
+      "note": "气动/声骸体系队友"
+    },
+    "露帕": {
+      "position": "体系副C/辅助",
+      "check_type": "owned_only",
+      "note": "热熔/聚爆体系核心拼图",
+      "core_team": []
+    },
+    "丽贝卡": {
+      "position": "副C/辅助",
+      "check_type": "fixed_team",
+      "core_team": [
+        "露西",
+        "丽贝卡"
+      ],
+      "note": "露西骇破队副C"
+    },
+    "仇远": {
+      "position": "体系副C/辅助",
+      "check_type": "two_team",
+      "core_teams": [
+        [
+          "嘉贝莉娜",
+          "仇远"
+        ],
+        [
+          "弗洛洛",
+          "仇远"
+        ]
+      ],
+      "note": "声骸技能拐"
+    },
+    "赞妮": {
+      "position": "主C",
+      "check_type": "fixed_team",
+      "core_team": [
+        "赞妮",
+        "菲比"
+      ],
+      "note": "光噪/衍射核心二人组"
+    },
+    "菲比": {
+      "position": "副C/主C",
+      "check_type": "fixed_team",
+      "core_team": [
+        "赞妮",
+        "菲比"
+      ],
+      "note": "赞妮队核心挂层队友"
+    },
+    "坎特蕾拉": {
+      "position": "副C/辅助",
+      "check_type": "fixed_team",
+      "core_team": [
+        "弗洛洛",
+        "坎特蕾拉"
+      ],
+      "note": "弗洛洛核心队友之一"
+    },
+    "布兰特": {
+      "position": "辅助/副C",
+      "check_type": "two_team",
+      "core_teams": [
+        [
+          "布兰特",
+          "长离"
+        ],
+        [
+          "布兰特",
+          "露帕"
+        ]
+      ],
+      "note": "热熔队核心二人组；第三位不绑定"
+    },
+    "椿": {
+      "position": "主C",
+      "check_type": "fixed_team",
+      "core_team": [
+        "椿",
+        "洛可可"
+      ],
+      "note": "湮灭主C核心二人组"
+    },
+    "珂莱塔": {
+      "position": "主C",
+      "check_type": "fixed_team",
+      "core_team": [
+        "珂莱塔",
+        "折枝"
+      ],
+      "note": "冷凝/共鸣技能主C核心二人组"
+    },
+    "今汐": {
+      "position": "主C",
+      "check_type": "fixed_team",
+      "core_team": [
+        "今汐",
+        "折枝"
+      ],
+      "note": "今汐经典核心二人组"
+    },
+    "忌炎": {
+      "position": "主C",
+      "check_type": "fixed_team",
+      "core_team": [
+        "忌炎",
+        "莫特斐"
+      ],
+      "note": "重击/Aero 主C核心二人组"
+    },
+    "长离": {
+      "position": "主C/速切",
+      "check_type": "two_team",
+      "core_teams": [
+        [
+          "长离",
+          "布兰特"
+        ],
+        [
+          "长离",
+          "露帕"
+        ]
+      ],
+      "note": "热熔/速切核心二人组"
+    },
+    "折枝": {
+      "position": "副C/辅助",
+      "check_type": "two_team",
+      "core_teams": [
+        [
+          "今汐",
+          "折枝"
+        ],
+        [
+          "珂莱塔",
+          "折枝"
+        ]
+      ],
+      "note": "冷凝/技能伤害核心副C"
+    },
+    "相里要": {
+      "position": "主C",
+      "check_type": "two_team",
+      "core_teams": [
+        [
+          "相里要",
+          "吟霖"
+        ],
+        [
+          "相里要",
+          "琳奈"
+        ]
+      ],
+      "note": "解放伤害主C核心二人组"
+    },
+    "吟霖": {
+      "position": "副C",
+      "check_type": "fixed_team",
+      "core_team": [
+        "相里要",
+        "吟霖"
+      ],
+      "note": "导电/解放伤害老牌核心二人组"
+    },
+    "洛可可": {
+      "position": "副C/辅助",
+      "check_type": "fixed_team",
+      "core_team": [
+        "椿",
+        "洛可可"
+      ],
+      "note": "椿队副C与聚怪/增益"
+    }
+  }
+}

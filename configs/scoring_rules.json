@@ -1,0 +1,102 @@
+{
+  "version": "v2",
+  "total_score": 100,
+  "formula": {
+    "character": {
+      "resonance_points": {
+        "1": 0.5,
+        "2": 1.5,
+        "3": 2.5,
+        "4": 2.8,
+        "5": 3.0,
+        "6": 4.0
+      },
+      "signature_weapon_first_points": 0.7,
+      "signature_weapon_extra_points": 0.2,
+      "team_complete_bonus": 0.3
+    },
+    "resource": {
+      "astrite_per_pull": 160,
+      "lunite_per_pull": 160,
+      "coral_per_pull": 8,
+      "pulls_per_target_character": 71,
+      "points_per_target_character": 2
+    },
+    "collectible": {
+      "astrite_per_pull": 160,
+      "lunite_per_rmb": 20,
+      "pulls_per_target_character": 71,
+      "points_per_target_character": 2
+    }
+  },
+  "components": {
+    "character": {
+      "max": 35,
+      "count_cap": 18,
+      "resonance_cap": 9,
+      "important_cap": 4,
+      "yellow_cap": 4,
+      "count_curve_unit": 24,
+      "yellow_score_unit": 70,
+      "resonance_points": {
+        "1": 0.4,
+        "2": 0.9,
+        "3": 1.5,
+        "4": 2.2,
+        "5": 3.0,
+        "6": 4.0
+      },
+      "important_character_bonus": 1.8
+    },
+    "weapon": {
+      "max": 22,
+      "count_cap": 15,
+      "refinement_cap": 5,
+      "structured_refinement_cap": 2,
+      "count_curve_unit": 18,
+      "refinement_points": {
+        "1": 0.4,
+        "2": 0.9,
+        "3": 1.5,
+        "4": 2.4,
+        "5": 3.5
+      }
+    },
+    "resource": {
+      "max": 18,
+      "pull_cap": 13,
+      "extra_cap": 5,
+      "pull_score_unit": 180,
+      "xing_sheng_per_pull": 160,
+      "moon_phase_per_pull": 160,
+      "wave_per_pull": 1,
+      "coral_per_point": 20
+    },
+    "risk": {
+      "max": 15,
+      "base": 15,
+      "deductions": {
+        "tap_bound": 4,
+        "wegame_bound": 4,
+        "change_bind_cd": 3,
+        "self_screenshot": 2,
+        "no_guarantee": 5
+      }
+    },
+    "collectible": {
+      "max": 6,
+      "fashion_point": 1.0,
+      "motor_point": 1.0,
+      "paint_point": 0.8,
+      "frame_mod_point": 0.8
+    },
+    "trade": {
+      "max": 4,
+      "base": 2,
+      "bargain_bonus": 1,
+      "fresh_bonus": 1,
+      "hot_penalty_threshold": 500,
+      "hot_penalty": 0.5
+    }
+  }
+}

@@ -1,0 +1,14 @@
+{
+  "value_formula": {
+    "expected_base": 88.0,
+    "expected_price_scale": 900.0,
+    "expected_power": 0.62,
+    "value_base": 50.0,
+    "delta_weight": 1.35,
+    "efficiency_multiplier": 100.0,
+    "efficiency_cap": 30.0,
+    "efficiency_weight": 0.25,
+    "min_value_score": 0.0,
+    "max_value_score": 100.0
+  }
+}

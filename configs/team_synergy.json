@@ -1,0 +1,272 @@
+{
+  "version": "draft-2026-06-11",
+  "notes": [
+    "用于后续配队完整度额外加分，暂未接入 score_accounts.py。",
+    "常驻五星和四星不参与角色梯度计分，但可以作为配队补位。",
+    "3.x 角色配队存在低置信项，后续需按实装和交易样本复核。"
+  ],
+  "bonus_rules": {
+    "complete_core": 4,
+    "partial_core": 2,
+    "generic_support": 1,
+    "max_bonus_per_character": 4
+  },
+  "teams": {
+    "守岸人": {
+      "position": "辅助",
+      "best_partners": ["今汐", "椿", "珂莱塔", "长离", "坎特蕾拉", "赞妮", "奥古斯塔", "卡提希娅"],
+      "complete_examples": [["今汐", "折枝", "守岸人"], ["椿", "洛可可", "守岸人"], ["珂莱塔", "折枝", "守岸人"]],
+      "partial_condition": ["任意高价值主C", "任意关键副C"],
+      "confidence": "high"
+    },
+    "今汐": {
+      "position": "主C",
+      "best_partners": ["折枝", "吟霖", "渊武", "维里奈", "守岸人"],
+      "complete_examples": [["今汐", "折枝", "守岸人"], ["今汐", "吟霖", "维里奈"]],
+      "partial_condition": ["折枝", "吟霖"],
+      "support_condition": ["守岸人", "维里奈"],
+      "confidence": "high"
+    },
+    "卡提希娅": {
+      "position": "主C",
+      "best_partners": ["露帕", "守岸人", "坎特蕾拉", "夏空", "维里奈"],
+      "complete_examples": [["卡提希娅", "露帕", "守岸人"], ["卡提希娅", "坎特蕾拉", "守岸人"]],
+      "partial_condition": ["露帕", "坎特蕾拉"],
+      "support_condition": ["守岸人", "维里奈"],
+      "confidence": "medium"
+    },
+    "爱弥斯": {
+      "position": "辅助/副C",
+      "best_partners": ["琳奈", "莫宁", "守岸人", "坎特蕾拉"],
+      "complete_examples": [["琳奈", "爱弥斯", "莫宁"], ["琳奈", "爱弥斯", "守岸人"]],
+      "partial_condition": ["琳奈", "莫宁"],
+      "support_condition": ["守岸人"],
+      "confidence": "low"
+    },
+    "椿": {
+      "position": "主C",
+      "best_partners": ["散华", "洛可可", "守岸人", "维里奈"],
+      "complete_examples": [["椿", "散华", "守岸人"], ["椿", "洛可可", "守岸人"]],
+      "partial_condition": ["散华", "洛可可"],
+      "support_condition": ["守岸人", "维里奈"],
+      "confidence": "high"
+    },
+    "长离": {
+      "position": "主C/速切",
+      "best_partners": ["安可", "布兰特", "炽霞", "守岸人", "维里奈"],
+      "complete_examples": [["长离", "安可", "守岸人"], ["长离", "布兰特", "守岸人"]],
+      "partial_condition": ["安可", "布兰特", "炽霞"],
+      "support_condition": ["守岸人", "维里奈"],
+      "confidence": "high"
+    },
+    "珂莱塔": {
+      "position": "主C",
+      "best_partners": ["折枝", "洛可可", "守岸人", "维里奈"],
+      "complete_examples": [["珂莱塔", "折枝", "守岸人"], ["珂莱塔", "洛可可", "守岸人"]],
+      "partial_condition": ["折枝", "洛可可"],
+      "support_condition": ["守岸人", "维里奈"],
+      "confidence": "high"
+    },
+    "千咲": {
+      "position": "主C/副C",
+      "best_partners": ["绯雪", "洛瑟菈", "丽贝卡", "守岸人"],
+      "complete_examples": [["千咲", "绯雪", "洛瑟菈"], ["千咲", "丽贝卡", "守岸人"]],
+      "partial_condition": ["绯雪", "洛瑟菈"],
+      "support_condition": ["守岸人", "丽贝卡"],
+      "confidence": "medium"
+    },
+    "绯雪": {
+      "position": "主C",
+      "best_partners": ["洛瑟菈", "千咲", "丽贝卡", "守岸人"],
+      "complete_examples": [["绯雪", "洛瑟菈", "千咲"], ["绯雪", "丽贝卡", "守岸人"]],
+      "partial_condition": ["洛瑟菈", "千咲"],
+      "support_condition": ["守岸人", "丽贝卡"],
+      "confidence": "medium"
+    },
+    "折枝": {
+      "position": "副C",
+      "best_partners": ["今汐", "珂莱塔", "守岸人", "维里奈"],
+      "complete_examples": [["今汐", "折枝", "守岸人"], ["珂莱塔", "折枝", "守岸人"]],
+      "partial_condition": ["今汐", "珂莱塔"],
+      "support_condition": ["守岸人", "维里奈"],
+      "confidence": "high"
+    },
+    "吟霖": {
+      "position": "副C",
+      "best_partners": ["今汐", "相里要", "卡卡罗", "维里奈", "守岸人"],
+      "complete_examples": [["相里要", "吟霖", "守岸人"], ["今汐", "吟霖", "维里奈"]],
+      "partial_condition": ["相里要", "今汐", "卡卡罗"],
+      "support_condition": ["守岸人", "维里奈"],
+      "confidence": "high"
+    },
+    "菲比": {
+      "position": "主C",
+      "best_partners": ["漂泊者·衍射", "守岸人", "维里奈", "赞妮"],
+      "complete_examples": [["菲比", "漂泊者·衍射", "守岸人"], ["菲比", "赞妮", "守岸人"]],
+      "partial_condition": ["漂泊者·衍射", "赞妮"],
+      "support_condition": ["守岸人", "维里奈"],
+      "confidence": "medium"
+    },
+    "坎特蕾拉": {
+      "position": "副C",
+      "best_partners": ["卡提希娅", "弗洛洛", "守岸人", "维里奈"],
+      "complete_examples": [["弗洛洛", "坎特蕾拉", "守岸人"], ["卡提希娅", "坎特蕾拉", "守岸人"]],
+      "partial_condition": ["弗洛洛", "卡提希娅"],
+      "support_condition": ["守岸人", "维里奈"],
+      "confidence": "medium"
+    },
+    "弗洛洛": {
+      "position": "主C",
+      "best_partners": ["坎特蕾拉", "守岸人", "维里奈"],
+      "complete_examples": [["弗洛洛", "坎特蕾拉", "守岸人"]],
+      "partial_condition": ["坎特蕾拉"],
+      "support_condition": ["守岸人", "维里奈"],
+      "confidence": "medium"
+    },
+    "尤诺": {
+      "position": "辅助",
+      "best_partners": ["奥古斯塔", "赞妮", "今汐", "守岸人"],
+      "complete_examples": [["奥古斯塔", "尤诺", "守岸人"], ["赞妮", "尤诺", "守岸人"]],
+      "partial_condition": ["奥古斯塔", "赞妮"],
+      "support_condition": ["守岸人"],
+      "confidence": "low"
+    },
+    "琳奈": {
+      "position": "主C/副C",
+      "best_partners": ["爱弥斯", "莫宁", "守岸人"],
+      "complete_examples": [["琳奈", "爱弥斯", "莫宁"], ["琳奈", "爱弥斯", "守岸人"]],
+      "partial_condition": ["爱弥斯", "莫宁"],
+      "support_condition": ["守岸人"],
+      "confidence": "low"
+    },
+    "相里要": {
+      "position": "主C",
+      "best_partners": ["吟霖", "守岸人", "维里奈", "长离"],
+      "complete_examples": [["相里要", "吟霖", "守岸人"]],
+      "partial_condition": ["吟霖"],
+      "support_condition": ["守岸人", "维里奈"],
+      "confidence": "high"
+    },
+    "忌炎": {
+      "position": "主C",
+      "best_partners": ["莫特斐", "守岸人", "维里奈", "白芷"],
+      "complete_examples": [["忌炎", "莫特斐", "守岸人"]],
+      "partial_condition": ["莫特斐"],
+      "support_condition": ["守岸人", "维里奈", "白芷"],
+      "confidence": "high"
+    },
+    "赞妮": {
+      "position": "主C",
+      "best_partners": ["菲比", "尤诺", "守岸人", "维里奈"],
+      "complete_examples": [["赞妮", "菲比", "守岸人"], ["赞妮", "尤诺", "守岸人"]],
+      "partial_condition": ["菲比", "尤诺"],
+      "support_condition": ["守岸人", "维里奈"],
+      "confidence": "medium"
+    },
+    "夏空": {
+      "position": "副C",
+      "best_partners": ["卡提希娅", "露帕", "守岸人", "维里奈"],
+      "complete_examples": [["卡提希娅", "夏空", "守岸人"], ["露帕", "夏空", "守岸人"]],
+      "partial_condition": ["卡提希娅", "露帕"],
+      "support_condition": ["守岸人", "维里奈"],
+      "confidence": "medium"
+    },
+    "奥古斯塔": {
+      "position": "主C",
+      "best_partners": ["尤诺", "守岸人", "维里奈", "吟霖"],
+      "complete_examples": [["奥古斯塔", "尤诺", "守岸人"]],
+      "partial_condition": ["尤诺"],
+      "support_condition": ["守岸人", "维里奈"],
+      "confidence": "low"
+    },
+    "丽贝卡": {
+      "position": "副C/辅助",
+      "best_partners": ["露西", "绯雪", "千咲", "守岸人"],
+      "complete_examples": [["露西", "丽贝卡", "守岸人"], ["绯雪", "丽贝卡", "守岸人"]],
+      "partial_condition": ["露西", "绯雪", "千咲"],
+      "support_condition": ["守岸人"],
+      "confidence": "medium"
+    },
+    "莫宁": {
+      "position": "副C/辅助",
+      "best_partners": ["琳奈", "爱弥斯", "守岸人"],
+      "complete_examples": [["琳奈", "爱弥斯", "莫宁"]],
+      "partial_condition": ["琳奈", "爱弥斯"],
+      "support_condition": ["守岸人"],
+      "confidence": "low"
+    },
+    "达妮娅": {
+      "position": "主C/副C",
+      "best_partners": ["守岸人", "维里奈", "坎特蕾拉", "夏空"],
+      "complete_examples": [["达妮娅", "坎特蕾拉", "守岸人"], ["达妮娅", "夏空", "守岸人"]],
+      "partial_condition": ["坎特蕾拉", "夏空"],
+      "support_condition": ["守岸人", "维里奈"],
+      "confidence": "low"
+    },
+    "洛可可": {
+      "position": "辅助",
+      "best_partners": ["椿", "珂莱塔", "守岸人", "散华"],
+      "complete_examples": [["椿", "洛可可", "守岸人"], ["珂莱塔", "洛可可", "守岸人"]],
+      "partial_condition": ["椿", "珂莱塔"],
+      "support_condition": ["守岸人", "维里奈"],
+      "confidence": "high"
+    },
+    "布兰特": {
+      "position": "辅助",
+      "best_partners": ["长离", "安可", "守岸人", "维里奈"],
+      "complete_examples": [["长离", "布兰特", "守岸人"], ["安可", "布兰特", "长离"]],
+      "partial_condition": ["长离", "安可"],
+      "support_condition": ["守岸人", "维里奈"],
+      "confidence": "medium"
+    },
+    "露帕": {
+      "position": "主C/辅助",
+      "best_partners": ["卡提希娅", "夏空", "守岸人", "维里奈"],
+      "complete_examples": [["卡提希娅", "露帕", "守岸人"], ["露帕", "夏空", "守岸人"]],
+      "partial_condition": ["卡提希娅", "夏空"],
+      "support_condition": ["守岸人", "维里奈"],
+      "confidence": "medium"
+    },
+    "嘉贝莉娜": {
+      "position": "主C/副C",
+      "best_partners": ["守岸人", "维里奈", "爱弥斯", "莫宁"],
+      "complete_examples": [["嘉贝莉娜", "爱弥斯", "守岸人"]],
+      "partial_condition": ["爱弥斯", "莫宁"],
+      "support_condition": ["守岸人", "维里奈"],
+      "confidence": "low"
+    },
+    "仇远": {
+      "position": "主C/副C",
+      "best_partners": ["守岸人", "维里奈", "夏空", "坎特蕾拉"],
+      "complete_examples": [["仇远", "夏空", "守岸人"], ["仇远", "坎特蕾拉", "守岸人"]],
+      "partial_condition": ["夏空", "坎特蕾拉"],
+      "support_condition": ["守岸人", "维里奈"],
+      "confidence": "low"
+    },
+    "西格莉卡": {
+      "position": "辅助/副C",
+      "best_partners": ["守岸人", "维里奈", "嘉贝莉娜", "仇远"],
+      "complete_examples": [["嘉贝莉娜", "西格莉卡", "守岸人"], ["仇远", "西格莉卡", "守岸人"]],
+      "partial_condition": ["嘉贝莉娜", "仇远"],
+      "support_condition": ["守岸人", "维里奈"],
+      "confidence": "low"
+    },
+    "露西": {
+      "position": "辅助/副C",
+      "best_partners": ["丽贝卡", "守岸人", "维里奈", "绯雪"],
+      "complete_examples": [["露西", "丽贝卡", "守岸人"], ["绯雪", "露西", "丽贝卡"]],
+      "partial_condition": ["丽贝卡", "绯雪"],
+      "support_condition": ["守岸人", "维里奈"],
+      "confidence": "medium"
+    },
+    "陆赫斯": {
+      "position": "主C/副C",
+      "best_partners": ["守岸人", "维里奈", "莫宁", "爱弥斯"],
+      "complete_examples": [["陆赫斯", "莫宁", "守岸人"], ["陆赫斯", "爱弥斯", "守岸人"]],
+      "partial_condition": ["莫宁", "爱弥斯"],
+      "support_condition": ["守岸人", "维里奈"],
+      "confidence": "low"
+    }
+  },
+  "external_partner_candidates": ["洛瑟菈", "漂泊者·衍射", "散华", "莫特斐", "渊武", "白芷", "安可", "卡卡罗", "炽霞", "维里奈"]
+}

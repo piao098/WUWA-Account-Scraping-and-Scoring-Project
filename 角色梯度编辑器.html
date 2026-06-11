@@ -1,0 +1,427 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>鸣潮角色梯度编辑器</title>
+  <style>
+    :root {
+      color-scheme: light;
+      --bg: #f5f7fa;
+      --panel: #ffffff;
+      --line: #d9dee8;
+      --text: #1f2937;
+      --muted: #667085;
+      --accent: #f08a20;
+      --accent-2: #2563eb;
+      --green: #047857;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Microsoft YaHei", sans-serif;
+      background: var(--bg);
+      color: var(--text);
+    }
+    header {
+      position: sticky;
+      top: 0;
+      z-index: 2;
+      padding: 14px 18px;
+      background: rgba(255,255,255,.96);
+      border-bottom: 1px solid var(--line);
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 12px;
+      align-items: center;
+    }
+    h1 { margin: 0; font-size: 20px; }
+    .sub { margin-top: 4px; color: var(--muted); font-size: 12px; }
+    .actions { display: flex; gap: 8px; align-items: center; }
+    button {
+      border: 1px solid var(--line);
+      background: #fff;
+      color: var(--text);
+      border-radius: 6px;
+      padding: 8px 10px;
+      cursor: pointer;
+      font-size: 13px;
+    }
+    button.primary {
+      background: var(--accent-2);
+      color: white;
+      border-color: var(--accent-2);
+    }
+    main { padding: 16px; }
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(280px, 1fr));
+      gap: 12px;
+      align-items: start;
+    }
+    .tier {
+      background: var(--panel);
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      min-height: 180px;
+      overflow: hidden;
+    }
+    .tier-head {
+      padding: 10px 12px;
+      border-bottom: 1px solid var(--line);
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 8px;
+      align-items: center;
+    }
+    .tier-title { font-weight: 700; }
+    .tier-title span { color: var(--accent); }
+    .mult {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      color: var(--muted);
+      font-size: 12px;
+    }
+    .mult input {
+      width: 64px;
+      border: 1px solid var(--line);
+      border-radius: 5px;
+      padding: 5px 6px;
+    }
+    .dropzone {
+      padding: 8px;
+      min-height: 130px;
+      display: grid;
+      gap: 8px;
+      align-content: start;
+    }
+    .dropzone.over { background: #fff7ed; }
+    .card {
+      border: 1px solid var(--line);
+      border-radius: 7px;
+      padding: 8px 9px;
+      background: #fff;
+      cursor: grab;
+    }
+    .card:active { cursor: grabbing; }
+    .name { font-weight: 700; font-size: 14px; }
+    .meta { margin-top: 4px; color: var(--muted); font-size: 12px; line-height: 1.45; }
+    .pill {
+      display: inline-block;
+      margin-right: 4px;
+      padding: 1px 5px;
+      border-radius: 4px;
+      background: #eef2ff;
+      color: #334155;
+    }
+    textarea {
+      width: 100%;
+      min-height: 260px;
+      margin-top: 14px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      padding: 10px;
+      font-family: Consolas, monospace;
+      font-size: 12px;
+    }
+    .toast {
+      color: var(--green);
+      font-size: 12px;
+      min-width: 80px;
+    }
+    @media (max-width: 980px) {
+      header { grid-template-columns: 1fr; }
+      .grid { grid-template-columns: 1fr; }
+      .actions { flex-wrap: wrap; }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div>
+      <h1>鸣潮角色梯度编辑器</h1>
+      <div class="sub">拖动角色调整梯度；修改倍率后点击保存。常驻五星和四星暂不参与。</div>
+    </div>
+    <div class="actions">
+      <button id="resetBtn">重置</button>
+      <button id="loadBtn">加载配置文件</button>
+      <button id="saveBtn" class="primary">保存到配置文件</button>
+      <button id="copyBtn">复制 JSON</button>
+      <button id="downloadBtn">下载 JSON</button>
+      <span id="toast" class="toast"></span>
+    </div>
+  </header>
+  <main>
+    <section id="tiers" class="grid"></section>
+    <textarea id="output" spellcheck="false" aria-label="导出的角色梯度 JSON"></textarea>
+  </main>
+  <script>
+    const initialData = {
+      "version": "image-3.4-draft-2026-06-11",
+      "source": "按用户提供的鸣潮 3.4 版本强度榜图片整理",
+      "notes": [
+        "讨论用预设梯度，暂不纳入 score_accounts.py。",
+        "按图片分层提取限定五星角色；常驻五星、四星和漂泊者暂不参与本轮角色倍率计分。",
+        "图片中 T4 基本为常驻或四星，所以本配置保留 T4 档位但暂不放入计分角色。",
+        "洛瑟菈专武中文名仍需后续复核。"
+      ],
+      "tier_multipliers": {
+        "T0": 10.0,
+        "T0.5": 8.5,
+        "T1": 7.0,
+        "T2": 5.0,
+        "T3": 3.0,
+        "T4": 1.5
+      },
+      "tiers": {
+        "T0": [
+          {"name":"爱弥斯","version":"3.x","role_type":"辅助/副C","signature_weapon":"灼霜","reason":"按 3.4 图片强度榜位于 T0。"},
+          {"name":"绯雪","version":"3.x","role_type":"主C","signature_weapon":"浩境粼光","reason":"按 3.4 图片强度榜位于 T0。"},
+          {"name":"琳奈","version":"3.x","role_type":"主C/副C","signature_weapon":"昙切","reason":"按 3.4 图片强度榜位于 T0。"},
+          {"name":"西格莉卡","version":"3.x","role_type":"辅助/副C","signature_weapon":"镭射切变","reason":"按 3.4 图片强度榜位于 T0。"}
+        ],
+        "T0.5": [
+          {"name":"达妮娅","version":"3.x","role_type":"主C/副C","signature_weapon":"赝作的矮星","reason":"按 3.4 图片强度榜位于 T0.5。"},
+          {"name":"洛瑟菈","version":"3.x","role_type":"副C/辅助","signature_weapon":"待补充","reason":"按 3.4 图片强度榜位于 T0.5。"},
+          {"name":"弗洛洛","version":"2.x","role_type":"主C","signature_weapon":"幽冥的忘忧章","reason":"按 3.4 图片强度榜位于 T0.5。"},
+          {"name":"守岸人","version":"1.x","role_type":"辅助","signature_weapon":"星序协响","reason":"按 3.4 图片强度榜位于 T0.5。"},
+          {"name":"卡提希娅","version":"3.x","role_type":"主C","signature_weapon":"不屈命定之冠","reason":"按 3.4 图片强度榜位于 T0.5。"},
+          {"name":"千咲","version":"3.x","role_type":"主C/副C","signature_weapon":"永远的启明星","reason":"按 3.4 图片强度榜位于 T0.5。"},
+          {"name":"莫宁","version":"3.x","role_type":"副C/辅助","signature_weapon":"相位涟漪","reason":"按 3.4 图片强度榜位于 T0.5。"},
+          {"name":"尤诺","version":"2.x","role_type":"辅助","signature_weapon":"万物持存的注释","reason":"按 3.4 图片强度榜位于 T0.5。"},
+          {"name":"奥古斯塔","version":"2.x","role_type":"主C","signature_weapon":"驭冕铸雷之权","reason":"按 3.4 图片强度榜位于 T0.5。"},
+          {"name":"陆赫斯","version":"3.x","role_type":"主C/副C","signature_weapon":"碎骨","reason":"按 3.4 图片强度榜位于 T0.5。"},
+          {"name":"露西","version":"3.x","role_type":"辅助/副C","signature_weapon":"蜃影","reason":"按 3.4 图片强度榜位于 T0.5。"}
+        ],
+        "T1": [
+          {"name":"嘉贝莉娜","version":"3.x","role_type":"主C/副C","signature_weapon":"玻色星仪","reason":"按 3.4 图片强度榜位于 T1。"},
+          {"name":"夏空","version":"2.x","role_type":"副C","signature_weapon":"林间的咏叹调","reason":"按 3.4 图片强度榜位于 T1。"},
+          {"name":"露帕","version":"3.x","role_type":"主C","signature_weapon":"昭日译注","reason":"按 3.4 图片强度榜位于 T1。"},
+          {"name":"丽贝卡","version":"3.x","role_type":"副C/辅助","signature_weapon":"溢彩荧辉","reason":"按 3.4 图片强度榜位于 T1。"},
+          {"name":"仇远","version":"3.x","role_type":"主C/副C","signature_weapon":"宙算仪轨","reason":"按 3.4 图片强度榜位于 T1。"},
+          {"name":"赞妮","version":"2.x","role_type":"主C","signature_weapon":"焰痕","reason":"按 3.4 图片强度榜位于 T1。"},
+          {"name":"菲比","version":"2.x","role_type":"主C","signature_weapon":"光影双生","reason":"按 3.4 图片强度榜位于 T1。"},
+          {"name":"坎特蕾拉","version":"2.x","role_type":"副C","signature_weapon":"海的呢喃","reason":"按 3.4 图片强度榜位于 T1。"},
+          {"name":"布兰特","version":"2.x","role_type":"辅助","signature_weapon":"不灭航路","reason":"按 3.4 图片强度榜位于 T1。"},
+          {"name":"椿","version":"1.x","role_type":"主C","signature_weapon":"裁春","reason":"按 3.4 图片强度榜位于 T1。"}
+        ],
+        "T2": [
+          {"name":"珂莱塔","version":"2.x","role_type":"主C","signature_weapon":"死与舞","reason":"按 3.4 图片强度榜位于 T2。"},
+          {"name":"今汐","version":"1.x","role_type":"主C","signature_weapon":"时和岁稔","reason":"按 3.4 图片强度榜位于 T2。"},
+          {"name":"忌炎","version":"1.x","role_type":"主C","signature_weapon":"苍鳞千嶂","reason":"按 3.4 图片强度榜位于 T2。"},
+          {"name":"长离","version":"1.x","role_type":"主C/速切","signature_weapon":"焰光裁定","reason":"按 3.4 图片强度榜位于 T2。"},
+          {"name":"折枝","version":"1.x","role_type":"副C","signature_weapon":"琼枝冰绡","reason":"按 3.4 图片强度榜位于 T2。"},
+          {"name":"相里要","version":"1.x","role_type":"主C","signature_weapon":"诸方玄枢","reason":"按 3.4 图片强度榜位于 T2。"}
+        ],
+        "T3": [
+          {"name":"吟霖","version":"1.x","role_type":"副C","signature_weapon":"掣傀之手","reason":"按 3.4 图片强度榜位于 T3。"},
+          {"name":"洛可可","version":"2.x","role_type":"辅助","signature_weapon":"悲喜剧","reason":"按 3.4 图片强度榜位于 T3。"}
+        ],
+        "T4": []
+      }
+    };
+    const tierOrder = ["T0", "T0.5", "T1", "T2", "T3", "T4"];
+    let data = JSON.parse(JSON.stringify(initialData));
+    let dragged = null;
+    const tiersEl = document.getElementById("tiers");
+    const outputEl = document.getElementById("output");
+    const toastEl = document.getElementById("toast");
+
+    function showToast(text) {
+      toastEl.textContent = text;
+      clearTimeout(showToast.timer);
+      showToast.timer = setTimeout(() => toastEl.textContent = "", 1600);
+    }
+
+    function findRole(name) {
+      for (const tier of tierOrder) {
+        const idx = data.tiers[tier].findIndex(r => r.name === name);
+        if (idx >= 0) return { tier, idx, role: data.tiers[tier][idx] };
+      }
+      return null;
+    }
+
+    function moveRole(name, targetTier, beforeName = null) {
+      const found = findRole(name);
+      if (!found) return;
+      const [role] = data.tiers[found.tier].splice(found.idx, 1);
+      let insertIndex = data.tiers[targetTier].length;
+      if (beforeName) {
+        const idx = data.tiers[targetTier].findIndex(r => r.name === beforeName);
+        if (idx >= 0) insertIndex = idx;
+      }
+      data.tiers[targetTier].splice(insertIndex, 0, role);
+      render();
+    }
+
+    function makeCard(role) {
+      const el = document.createElement("div");
+      el.className = "card";
+      el.draggable = true;
+      el.dataset.name = role.name;
+      el.innerHTML = `
+        <div class="name">${role.name}</div>
+        <div class="meta">
+          <span class="pill">${role.version}</span>
+          <span class="pill">${role.role_type}</span>
+          专武：${role.signature_weapon}<br>
+          ${role.reason}
+        </div>`;
+      el.addEventListener("dragstart", event => {
+        dragged = role.name;
+        event.dataTransfer.setData("text/plain", role.name);
+      });
+      el.addEventListener("dragover", event => event.preventDefault());
+      el.addEventListener("drop", event => {
+        event.preventDefault();
+        const name = event.dataTransfer.getData("text/plain") || dragged;
+        const targetZone = el.closest(".dropzone");
+        moveRole(name, targetZone.dataset.tier, role.name);
+      });
+      return el;
+    }
+
+    function makeTier(tier) {
+      const wrap = document.createElement("section");
+      wrap.className = "tier";
+      const head = document.createElement("div");
+      head.className = "tier-head";
+      head.innerHTML = `
+        <div class="tier-title"><span>${tier}</span> · ${data.tiers[tier].length} 人</div>
+        <label class="mult">倍率 <input type="number" step="0.1" value="${data.tier_multipliers[tier]}"></label>`;
+      head.querySelector("input").addEventListener("input", event => {
+        data.tier_multipliers[tier] = Number(event.target.value || 0);
+        updateOutput();
+      });
+      const zone = document.createElement("div");
+      zone.className = "dropzone";
+      zone.dataset.tier = tier;
+      zone.addEventListener("dragover", event => {
+        event.preventDefault();
+        zone.classList.add("over");
+      });
+      zone.addEventListener("dragleave", () => zone.classList.remove("over"));
+      zone.addEventListener("drop", event => {
+        event.preventDefault();
+        zone.classList.remove("over");
+        const name = event.dataTransfer.getData("text/plain") || dragged;
+        moveRole(name, tier);
+      });
+      data.tiers[tier].forEach(role => zone.appendChild(makeCard(role)));
+      wrap.appendChild(head);
+      wrap.appendChild(zone);
+      return wrap;
+    }
+
+    function updateOutput() {
+      outputEl.value = JSON.stringify(data, null, 2);
+    }
+
+    function syncFromOutput() {
+      try {
+        const next = JSON.parse(outputEl.value);
+        if (!next.tiers || !next.tier_multipliers) throw new Error("缺少 tiers 或 tier_multipliers");
+        data = next;
+        render();
+        showToast("已应用 JSON");
+        return true;
+      } catch (error) {
+        showToast(`JSON 无效：${error.message}`);
+        return false;
+      }
+    }
+
+    async function copyJson() {
+      updateOutput();
+      try {
+        await navigator.clipboard.writeText(outputEl.value);
+        showToast("已复制");
+      } catch (error) {
+        outputEl.focus();
+        outputEl.select();
+        const ok = document.execCommand("copy");
+        showToast(ok ? "已复制" : "复制失败，请手动复制");
+      }
+    }
+
+    async function loadConfig() {
+      try {
+        const response = await fetch("/api/character-tiers", { cache: "no-store" });
+        if (!response.ok) throw new Error(`HTTP ${response.status}`);
+        data = await response.json();
+        render();
+        showToast("已加载配置");
+        return true;
+      } catch (error) {
+        showToast("请用本地服务地址打开后再加载");
+        return false;
+      }
+    }
+
+    async function saveConfig() {
+      updateOutput();
+      let payload;
+      try {
+        payload = JSON.parse(outputEl.value);
+      } catch (error) {
+        showToast(`JSON 无效：${error.message}`);
+        return;
+      }
+      try {
+        const response = await fetch("/api/character-tiers", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(payload)
+        });
+        const result = await response.json();
+        if (!response.ok || !result.ok) throw new Error(result.error || `HTTP ${response.status}`);
+        data = payload;
+        showToast("已保存到配置文件");
+      } catch (error) {
+        showToast("保存失败：请用本地服务地址打开");
+      }
+    }
+
+    function render() {
+      tiersEl.innerHTML = "";
+      tierOrder.forEach(tier => tiersEl.appendChild(makeTier(tier)));
+      updateOutput();
+    }
+
+    async function start() {
+      const loaded = await loadConfig();
+      if (!loaded) render();
+    }
+
+    document.getElementById("resetBtn").addEventListener("click", async () => {
+      const loaded = await loadConfig();
+      if (loaded) {
+        showToast("已重置为配置文件");
+      } else {
+        data = JSON.parse(JSON.stringify(initialData));
+        render();
+        showToast("已重置为内置默认");
+      }
+    });
+    document.getElementById("loadBtn").addEventListener("click", loadConfig);
+    document.getElementById("saveBtn").addEventListener("click", saveConfig);
+    document.getElementById("copyBtn").addEventListener("click", copyJson);
+    document.getElementById("downloadBtn").addEventListener("click", () => {
+      updateOutput();
+      const blob = new Blob([outputEl.value], { type: "application/json;charset=utf-8" });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = "character_tiers.json";
+      a.click();
+      URL.revokeObjectURL(url);
+      showToast("已下载");
+    });
+    outputEl.addEventListener("blur", () => {
+      if (outputEl.value.trim()) syncFromOutput();
+    });
+    start();
+  </script>
+</body>
+</html>
